@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Usage: python day4-lunch-1.py
+"""
+
 # Load libraries
 import pandas as pd
 
@@ -23,7 +27,7 @@ for line in gtf:
 # Close GTF
 gtf.close()
 
-# Search for protein coding gene closest to position 21,378,950 (POI) on chromosome 3R
+# Search for protein coding gene closest to position 21,378,950 on chromosome 3R
 pos = 21378950
 
 # Initialize variables for binary search
@@ -38,10 +42,10 @@ while low <= high:
 
 	counter += 1
 
-	# Compare POI to gene at mid
+	# Compare position to gene at mid
 	mid = (low + high) // 2
 
-	# If POI is to the left of the gene at mid, move left
+	# If position is to the left of the gene at mid, move left
 	if (pos < gtf_3R[mid][1]):
 		high = mid - 1
 
@@ -49,7 +53,7 @@ while low <= high:
 			distance = gtf_3R[mid][1] - pos
 			gene_close = gtf_3R[mid][0]
 
-	# If POI is to the right of the gene at mid, move right
+	# If position is to the right of the gene at mid, move right
 	elif (pos > gtf_3R[mid][2]):
 		low = mid + 1
 
@@ -57,7 +61,7 @@ while low <= high:
 			distance = pos - gtf_3R[mid][2]
 			gene_close = gtf_3R[mid][0]
 
-	# Otherwise, POI is in the gene at mid and distance is 0
+	# Otherwise, position is in the gene at mid and distance is 0
 	else:
 		distance = 0
 		gene_close = gtf_3R[mid][0]

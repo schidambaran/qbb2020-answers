@@ -1,0 +1,1 @@
+The closest protein coding gene to 3R:21,378,950 is tin, 27 base pairs away. It took 12 iterations to find this gene.
