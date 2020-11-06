@@ -108,6 +108,7 @@ p_values_df["Transcript"][p_values_df["fdr_0.10"]].to_csv("diff_expression.txt",
 
 # Repeat analysis, but with sex as a covariate
 p_values_cov = []
+
 for transcript in fpkm_reformat["t_name"].unique():
 
 	# Get all expression data for one transcript
@@ -116,10 +117,10 @@ for transcript in fpkm_reformat["t_name"].unique():
 	# Use OLS to test if transcript is differentially expressed across stages while controlling for sex
 	model = smf.ols(formula = "fpkm ~ stage + sex", data = transcript_data)
 	results = model.fit()
-	p_values_cov.append([transcript, float(results.pvalues["stage"])])
+	p_values_cov.append([transcript, float(results.pvalues["stage"]), float(results.params["stage"])])
 
 # Convert p-value data to dataframe and calculate -log10(p-values)
-p_values_cov_df = pd.DataFrame(p_values_cov, columns = ["Transcript", "p_values"])
+p_values_cov_df = pd.DataFrame(p_values_cov, columns = ["Transcript", "p_values", "beta"])
 p_values_cov_df = p_values_cov_df.sort_values(by = "p_values")
 p_values_cov_df["log_p_values"] = -1 * np.log10(p_values_cov_df["p_values"])
 
@@ -157,3 +158,15 @@ percent_overlap = (len(overlap) / len(transcripts_wo_cov)) * 100
 overlap_output = open("percent_overlap.txt", "w")
 overlap_output.write("The percent overlap with and without sex as a covariate is " + str(percent_overlap) + "%.")
 overlap_output.close()
+
+# Create volcano plot of differentially expressed transcripts when sex is a covariate
+fig, ax = plt.subplots()
+
+ax.scatter(p_values_cov_df["beta"], p_values_cov_df["log_p_values"])
+ax.scatter(p_values_cov_df["beta"][p_values_cov_df["p_values"] < 0.05], p_values_cov_df["log_p_values"][p_values_cov_df["p_values"] < 0.05], color = "red")
+
+ax.set_title("Differential Expression in Drosophila Embryos")
+ax.set_xlabel("-log10(p-value)")
+ax.set_ylabel("Beta")
+
+fig.savefig("volcano_plot.png")
