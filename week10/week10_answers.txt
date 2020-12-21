@@ -1,0 +1,71 @@
+Sadhana Chidambaran
+
+Question 1: Briefly comment on the trends you see in the gut microbiota throughout the first week.
+
+Initially, there are two major phyla of bacteria present in the gut: Actinobacteria (mostly the Cutibacterium avidum species), 
+and Firmicutes (mostly Enterococcus faecelis). Over time, Firmicutes dominates the gut microbiome, with the two most abundant species 
+being Enterococcus faecelis and Staphylococcus epidermidis.
+
+Question 2: What metrics in the contigs can we use to group them together?
+
+Contigs can be grouped when their sequences dovetail, i.e. there is strong overlap between them. Instead of looking for long 
+exact matches, contigs can be grouped by matching k-mers. If enough continuous k-mers overlap, the contigs can be said to be 
+in the same group. This will make it easier to account for any potential gaps or nucleotide substitutions that may be in 
+individual contigs.
+
+Question 3:
+(A) How many bins did you get?
+
+MetaBAT grouped the contigs into six bins.
+
+(B) Roughly what percentage of the assembly do they represent?
+
+These bins represent about 45% of the assembly.
+
+Bases in assembly.fasta: 38708237
+grep -v ">" week13_data/assembly.fasta | wc -c
+
+Bases in all bins: 17365118
+grep -v ">" metabat/*.fa | wc -c
+
+(C) Do you think the sizes of each bin look about right, based on what you know about the size of prokaryotic genomes?
+
+Bacterial genomes are typically a few million base pairs long. The genomes binned here have about 1.5 - 3 million base pairs, 
+which is small enough to be accurate for bacteria.
+
+(D) How would you estimate how complete and how contaminated each bin is?
+
+The 16s rRNA gene is often used to classify bacteria into different groups; bacteria with similar genes are said to belong to 
+the same operational taxonomic unit (OTU). If other unique genes are identified for a particular bacterial species, they can 
+be used to identify specific genomes. For example, if a gene unique to species X is found in a bin predominantly identified as 
+the species Y genome, the Y genome can be said to be contaminated with X. If, on the other hand, the unique X gene is not found 
+within the X genome, the X genome could be incomplete.
+
+Question 4:
+(A) What are your predictions for each bin?
+
+Bin 1 - Staphylococcus haemolyticus
+Bin 2 - Leuconostoc citreum 
+Bin 3 - Staphylococcus lugdunensis
+Bin 4 - Enterococcus faecalis
+Bin 5 - Cutibacterium avidum
+Bin 6 - Staphylococcus epidermidis
+Bin 7 - Staphylococcus aureus
+Bin 8 - Anaerococcus prevotii
+
+(B) This approach to classification is fast, but not very quantitative. Propose one method to more robustly infer the taxonomy 
+of a metagenomic bin.
+
+This classification method does not actually look at the nucleotide composition of the bins compared to the assembly. Doing 
+such a comparison could strengthen the argument that a bin represents a specific species. The bin sequence could also be compared 
+directly to other species in the genus, as they probably all evolved from the same ancestor. Comparing the bin sequence to species 
+outside the genus could confirm this, by showing greater genetic differences.
+
+Question 5: Compare the results of the individual genome abundance analysis to the conclusions you derived from looking at the 
+read taxonomy distributions (from Step 1). Do they agree with each other? What is different?
+
+Enterococcus faecelis is the most abundant species at each time point, which corresponds to the initial conclusions made 
+in Step 1. The abundance of Staphylococcus epidermidis also increases over time as previously stated, while the abundance of 
+Cutibacterium avidum decreases. The individual genome abundance analysis provides a more detailed picture, however; 
+it is easier to see the dynamics of species that are overall less abundant. Anaerococcus prevotti is shown here to be more 
+abundant at earlier time points, which was not picked up in the analysis from Step 1.
